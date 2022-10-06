@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <pthread.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -8,12 +9,14 @@
 #define PORT 8080
 #define NUM_CLIENT 3
 
+void *client_connection(void *client_num_thread);
+
 int main()
 {
     pthread_t sniffer_thread;
     for (int client_num = 1; client_num <= NUM_CLIENT; client_num++)
     {
-        if (pthread_create(&sniffer_thread, NULL, client_connection, (void *)client_num) < 0)
+        if (pthread_create(&sniffer_thread, NULL, client_connection, (void *)&client_num) < 0)
         {
             printf("Thread creation for CLient-%d failed.\n", client_num);
             return 0;
@@ -24,8 +27,11 @@ int main()
     return 0;
 }
 
-int client_connection(int client_num)
+void *client_connection(void *client_num_thread)
 {
+    // Client number for various threads
+    int client_num = (intptr_t)client_num_thread;
+
     // Client socket initialization
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_fd < 0)
@@ -63,6 +69,4 @@ int client_connection(int client_num)
 
     // Close the socket
     close(socket_fd);
-
-    return 0;
 }
