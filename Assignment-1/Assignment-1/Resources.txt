@@ -1,0 +1,16 @@
+Q2:
+https://www.meridianoutpost.com/resources/articles/command-line/nslookup.php#:~:text=An%20authoritative%20answer%20is%20when,is%20to%20reduce%20server%20load.
+https://stackoverflow.com/questions/38021/how-do-i-find-the-authoritative-name-server-for-a-domain-name
+https://superuser.com/questions/1197955/nslookup-dns-query-wont-display-authoritative-answer
+https://www.cloudns.net/blog/10-most-used-nslookup-commands/
+https://www.pcwdld.com/nslookup-dns-records#wbounce-modal
+https://www.cyberciti.biz/faq/how-to-see-time-to-live-ttl-for-a-dns-record/
+https://www.howtouselinux.com/post/dns-ttl
+https://www.cloudns.net/blog/ttl/
+
+Q3:
+https://www.youtube.com/watch?v=up3bcBLZS74
+https://networkengineering.stackexchange.com/questions/54344/why-is-a-tcp-socket-identified-by-a-4-tuple
+
+Q6:
+https://www.tecmint.com/20-netstat-commands-for-linux-network-management/
