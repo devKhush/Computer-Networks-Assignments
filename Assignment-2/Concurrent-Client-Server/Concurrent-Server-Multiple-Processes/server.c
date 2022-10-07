@@ -59,7 +59,7 @@ int main()
         int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (client_socket_fd < 0)
         {
-            printf("Client-accept failed \n");
+            printf("Client accept failed \n");
             exit(0);
         }
 
@@ -69,7 +69,6 @@ int main()
 
         if (fork() == 0)
         {
-
             // Closing the server socket id
             close(server_socket_fd);
 
