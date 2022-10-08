@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define PORT 8080
-#define NUM_CLIENT 3
+#define NUM_CLIENT 10
 
 void *client_connection(void *client_num_thread);
 
@@ -30,7 +30,7 @@ int main()
 void *client_connection(void *client_num_thread)
 {
     // Client number for various threads
-    int client_num = (intptr_t)client_num_thread;
+    int client_num = *(int *)client_num_thread;
 
     // Client socket initialization
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
