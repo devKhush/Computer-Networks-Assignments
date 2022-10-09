@@ -67,7 +67,8 @@ int main()
         // printf("Connected to New Client %u:%u\n", client_addr.sin_addr.s_addr, client_addr.sin_port);
         printf("Connection accepted from %s:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-        if (fork() == 0)
+        int child_process = fork();
+        if (child_process == 0)
         {
             // Closing the server socket id
             close(server_socket_fd);
