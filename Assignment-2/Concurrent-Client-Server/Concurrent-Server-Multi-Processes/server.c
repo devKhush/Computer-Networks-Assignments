@@ -13,7 +13,7 @@
 int main()
 {
     // Server socket initialization
-    int server_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (server_socket_fd < 0)
     {
         printf("Server socket creation failed. \n");
@@ -36,7 +36,7 @@ int main()
     }
 
     // Server listening...
-    int listen_status = listen(server_socket_fd, 5);
+    int listen_status = listen(server_socket_fd, 15);
     if (listen_status < 0)
     {
         printf("Server listening failed.\n");
@@ -59,14 +59,12 @@ int main()
         int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (client_socket_fd < 0)
         {
-            printf("Client accept failed \n");
+            // printf("Client accept failed \n");
             exit(0);
         }
-
-        // TODO
-        // printf("Connected to New Client %u:%u\n", client_addr.sin_addr.s_addr, client_addr.sin_port);
         printf("Connection accepted from %s:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
+        // Create a new Process
         int child_process = fork();
         if (child_process == 0)
         {
@@ -92,8 +90,8 @@ int main()
 
                 // Writing into the file
                 char request[200];
-                sprintf(request, "Client with IP-address='%u' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
-                        client_addr.sin_addr.s_addr, client_addr.sin_port, message_from_client, message_from_server);
+                sprintf(request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
+                        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
                 fputs(request, file_ptr);
             }
             printf("\n");

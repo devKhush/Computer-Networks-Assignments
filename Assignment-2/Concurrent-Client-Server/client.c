@@ -19,7 +19,7 @@ int main()
         int ith_client_thread_status = pthread_create(&sniffer_thread, NULL, client_connection, (void *)&client_num);
         if (ith_client_thread_status < 0)
         {
-            printf("Thread creation for CLient-%d failed.\n", client_num);
+            printf("Thread creation for Client-%d failed.\n", client_num);
             exit(0);
         }
     }
@@ -33,7 +33,7 @@ void *client_connection(void *client_num_thread)
     int client_num = *(int *)client_num_thread;
 
     // Client socket initialization
-    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (socket_fd < 0)
     {
         printf("Client socket creation failed. \n");
@@ -45,6 +45,7 @@ void *client_connection(void *client_num_thread)
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
+    // TODO
     server_addr.sin_port = htons(PORT);
 
     // Connect with the server
