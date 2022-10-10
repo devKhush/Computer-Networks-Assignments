@@ -41,7 +41,7 @@ int main()
     }
 
     // Server listening...
-    int listen_status = listen(server_socket_fd, 5);
+    int listen_status = listen(server_socket_fd, 15);
     if (listen_status < 0)
     {
         printf("Server listening failed.\n");
