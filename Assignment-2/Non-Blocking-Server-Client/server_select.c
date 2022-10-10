@@ -31,11 +31,8 @@ int main()
     }
     all_client_connections[0] = server_socket_fd;
 
-    // Server socket address
-    struct sockaddr_in server_addr, client_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(PORT);
+    // Client socket address
+    struct sockaddr_in client_addr;
 
     // Compute factorial for server-client request
     long long int factorial[21];
@@ -49,6 +46,7 @@ int main()
     // Open client connections
     fd_set server_read_fd_set;
 
+    // Connect Client to Server
     while (true)
     {
         FD_ZERO(&server_read_fd_set);
@@ -65,7 +63,7 @@ int main()
         // Select woke up. Identify the fd_set that has events   I
         if (select_return_value >= 0)
         {
-            printf("==> Select() returned with %d\n", select_return_value);
+            // printf("==> Select() returned with %d\n", select_return_value);
 
             // Check if fd with event is the server fd
             if (FD_ISSET(server_socket_fd, &server_read_fd_set))
@@ -74,7 +72,7 @@ int main()
                 int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
                 if (client_socket_fd >= 0)
                 {
-                    printf("******* Accepted a new Connection with fd %d ******* \n", client_socket_fd);
+                    printf("***** Accepted a new Connection with fd %d *****\n", client_socket_fd);
                     for (int i = 0; i < NUM_CLIENTS; i++)
                     {
                         if (all_client_connections[i] < 0)
@@ -141,13 +139,20 @@ int main()
         if (all_client_connections[i] > 0)
             close(all_client_connections[i]);
     }
+
+    // Close server socket
+    close(server_socket_fd);
+
+    // Close the file
+    fclose(file_ptr);
+
     return 0;
 }
 
 int initialize_TCP_server_socket()
 {
     // Server socket initialization
-    int server_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (server_socket_fd < 0)
     {
         printf("Server socket creation failed. \n");
@@ -170,7 +175,7 @@ int initialize_TCP_server_socket()
     }
 
     // Server listening...
-    int listen_status = listen(server_socket_fd, 5);
+    int listen_status = listen(server_socket_fd, 15);
     if (listen_status < 0)
     {
         printf("Server listening failed.\n");
