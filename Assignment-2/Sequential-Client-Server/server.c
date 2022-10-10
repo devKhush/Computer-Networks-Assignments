@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,9 +51,9 @@ int main()
 
     // Opening a file
     FILE *file_ptr = fopen("client_requests.txt", "w");
+    fputs("\n", file_ptr);
 
-    int i = 0;
-    while (i++ < 3)
+    while (true)
     {
         // Connect the Server socket with the client
         int client_addr_len = sizeof(client_addr);
@@ -63,9 +64,8 @@ int main()
             exit(0);
         }
 
-        // TODO
-        // printf("Connected to New Client %u:%u\n", client_addr.sin_addr.s_addr, client_addr.sin_port);
-        // printf("Connection accepted from %u:%u\n", inet_ntoa(client_addr.sin_addr.s_addr), ntohs(client_addr.sin_port));
+        // Client IP and port information
+        printf("Connection accepted from %s:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
         // Read and write from and to the client
         for (int i = 1; i <= 20; i++)
@@ -86,8 +86,8 @@ int main()
 
             // Writing into the file
             char request[200];
-            sprintf(request, "Client with IP-address='%u' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
-                    client_addr.sin_addr.s_addr, client_addr.sin_port, message_from_client, message_from_server);
+            sprintf(request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
+                    inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
             fputs(request, file_ptr);
         }
         printf("\n");

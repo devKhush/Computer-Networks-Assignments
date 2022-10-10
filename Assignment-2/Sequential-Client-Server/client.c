@@ -10,7 +10,7 @@
 int main()
 {
     // Client socket initialization
-    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (socket_fd < 0)
     {
         printf("Client socket creation failed. \n");
@@ -22,6 +22,7 @@ int main()
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
+    // TODO
     server_addr.sin_port = htons(PORT);
 
     // Connect with the server
