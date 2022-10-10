@@ -58,13 +58,11 @@ int main()
         int client_addr_len = sizeof(client_addr);
         int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (client_socket_fd < 0)
-        {
-            // printf("Client accept failed \n");
-            exit(0);
-        }
+            break;
+
         printf("Connection accepted from %s:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-        // Create a new Process
+        // Create a new Process for Client-Server connection
         int child_process = fork();
         if (child_process == 0)
         {
@@ -80,7 +78,7 @@ int main()
                 if (message_from_client < 0)
                 {
                     printf("Reading from Client socket failed \n");
-                    exit(0);
+                    continue;
                 }
                 printf("Client replied: %d\n", message_from_client);
 

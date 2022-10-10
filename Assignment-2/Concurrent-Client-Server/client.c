@@ -13,6 +13,7 @@ void *client_connection(void *client_num_thread);
 
 int main()
 {
+    // Create multiple threads for Client connections
     pthread_t sniffer_thread;
     for (int client_num = 1; client_num <= NUM_CLIENT; client_num++)
     {
