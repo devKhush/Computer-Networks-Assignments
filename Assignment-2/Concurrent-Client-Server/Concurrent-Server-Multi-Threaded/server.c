@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <pthread.h>
@@ -55,11 +56,12 @@ int main()
     // Opening a file
     file_ptr = fopen("client_requests.txt", "w");
 
-    // Connection with clients
-    int client_addr_len = sizeof(client_addr);
-    int client_socket_fd;
-    while (client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len))
+    // Connecting to client
+    while (true)
     {
+        // Connection with clients
+        int client_addr_len = sizeof(client_addr);
+        int client_socket_fd = client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (client_socket_fd < 0)
         {
             printf("Client accept failed \n");
@@ -91,7 +93,6 @@ int main()
 
     return 0;
 }
-
 
 void *server_client_connection(void *client_socket)
 {
