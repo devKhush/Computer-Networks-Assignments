@@ -13,7 +13,7 @@
 int main()
 {
     // Server socket initialization
-    int server_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (server_socket_fd < 0)
     {
         printf("Server socket creation failed. \n");
@@ -51,7 +51,6 @@ int main()
 
     // Opening a file
     FILE *file_ptr = fopen("client_requests.txt", "w");
-    fputs("\n", file_ptr);
 
     while (true)
     {
@@ -61,7 +60,7 @@ int main()
         if (client_socket_fd < 0)
         {
             printf("Client accept failed \n");
-            exit(0);
+            continue;
         }
 
         // Client IP and port information
@@ -76,7 +75,7 @@ int main()
             if (message_from_client < 0)
             {
                 printf("Reading from Client socket failed \n");
-                exit(0);
+                continue;
             }
             printf("Client replied: %d\n", message_from_client);
 
@@ -88,7 +87,8 @@ int main()
             char request[200];
             sprintf(request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
                     inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
-            fputs(request, file_ptr);
+            fprintf(file_ptr, request, NULL);
+            fflush(file_ptr);
         }
         printf("\n");
     }
