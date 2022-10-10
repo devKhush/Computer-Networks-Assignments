@@ -18,7 +18,7 @@ void *server_client_connection(void *client_socket);
 int main()
 {
     // Server socket initialization
-    int server_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (server_socket_fd < 0)
     {
         printf("Server socket creation failed. \n");
@@ -67,7 +67,7 @@ int main()
             printf("Client accept failed \n");
             continue;
         }
-        printf("Connection accepted from %s:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+        printf("***** Connection accepted from %s:%u *****\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
         // Pointer to the client socket fd
         int *client_socket_fd_ptr = &client_socket_fd;
