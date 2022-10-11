@@ -73,6 +73,13 @@ int main()
                 if (client_socket_fd >= 0)
                 {
                     printf("***** New Client connected successfully with fd %d *****\n", client_socket_fd);
+
+                    // Writing into the file_ptr
+                    fflush(file_ptr);
+                    char empty[200];
+                    sprintf(empty, "********** New Client connected successfully with IP-address='%s' and Port-no.='%u' **********\n\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+                    fputs(empty, file_ptr);
+
                     for (int i = 0; i < NUM_CLIENTS; i++)
                     {
                         if (all_client_connections[i] < 0)
@@ -112,14 +119,6 @@ int main()
                     }
                     if (return_val > 0)
                     {
-                        // Writing into the file_ptr
-                        if (message_from_client == 1)
-                        {
-                            fflush(file_ptr);
-                            char empty[200];
-                            sprintf(empty, "********** New Client connected successfully with IP-address='%s' and Port-no.='%u' **********\n\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-                            fputs(empty, file_ptr);
-                        }
                         printf("Client replied: %d\n", message_from_client);
 
                         // Server's message to the client
@@ -130,9 +129,7 @@ int main()
                         char file_request[200];
                         sprintf(file_request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
                         fputs(file_request, file_ptr);
-
-                        if (message_from_client == 20)
-                            fflush(file_ptr);
+                        fflush(file_ptr);
                     }
                 }
                 return_val--;
