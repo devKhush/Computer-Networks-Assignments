@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <inttypes.h>
 
-#define NUM_CLIENTS 10
+#define NUM_CLIENTS 11
 #define PORT 8080
 
 int initialize_TCP_server_socket();
@@ -72,7 +72,7 @@ int main()
                 int client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_addr, &client_addr_len);
                 if (client_socket_fd >= 0)
                 {
-                    printf("***** Accepted a new Connection with fd %d *****\n", client_socket_fd);
+                    printf("***** New Client connected successfully with fd %d *****\n", client_socket_fd);
                     for (int i = 0; i < NUM_CLIENTS; i++)
                     {
                         if (all_client_connections[i] < 0)
@@ -102,28 +102,37 @@ int main()
                     return_val = recv(all_client_connections[i], &message_from_client, sizeof(message_from_client), 0);
                     if (return_val < 0)
                     {
-                        printf("Reading from Client socket failed \n");
                         break;
                     }
                     if (return_val == 0)
                     {
-                        printf("*******Closing connection for client FD: %d ******* \n", all_client_connections[i]);
+                        printf("*****Closing connection for client FD: %d ***** \n", all_client_connections[i]);
                         close(all_client_connections[i]);
                         all_client_connections[i] = -1;
                     }
                     if (return_val > 0)
                     {
-                        printf("\nClient replied: %d\n", message_from_client);
+                        // Writing into the file_ptr
+                        if (message_from_client == 1)
+                        {
+                            fflush(file_ptr);
+                            char empty[200];
+                            sprintf(empty, "********** New Client connected successfully with IP-address='%s' and Port-no.='%u' **********\n\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+                            fputs(empty, file_ptr);
+                        }
+                        printf("Client replied: %d\n", message_from_client);
 
                         // Server's message to the client
                         long long int message_from_server = factorial[message_from_client];
                         send(all_client_connections[i], &message_from_server, sizeof(message_from_server), 0);
 
                         // Writing into the file
-                        char request[200];
-                        sprintf(request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n",
-                                inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
-                        fputs(request, file_ptr);
+                        char file_request[200];
+                        sprintf(file_request, "Client with IP-address='%s' and Port-no.='%u' \nClient request = %d \nServer response = %lli \n\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), message_from_client, message_from_server);
+                        fputs(file_request, file_ptr);
+
+                        if (message_from_client == 20)
+                            fflush(file_ptr);
                     }
                 }
                 return_val--;
@@ -170,7 +179,7 @@ int initialize_TCP_server_socket()
     int bind_status = bind(server_socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (bind_status < 0)
     {
-        printf("Server Bind failed. \n");
+        printf("Server Bind failed. Port number already in use.\n");
         return -1;
     }
 
@@ -181,5 +190,7 @@ int initialize_TCP_server_socket()
         printf("Server listening failed.\n");
         return -1;
     }
+    printf("Listening for connections on Port %d\n\n", PORT);
+
     return server_socket_fd;
 }
