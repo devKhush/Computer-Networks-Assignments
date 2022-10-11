@@ -92,13 +92,13 @@ int main()
                     continue;
             }
 
-            int client_message_read_status;
             // Check if the FD with the events is the non-server (client) FD
             for (int i = 1; i <= NUM_CLIENTS; i++)
             {
                 if (poll_fds[i].fd > 0 && poll_fds[i].revents & POLLIN)
                 {
                     // Message received from the client
+                    int client_message_read_status;
                     int message_from_client;
                     client_message_read_status = recv(poll_fds[i].fd, &message_from_client, sizeof(message_from_client), 0);
                     if (client_message_read_status <= 0)
