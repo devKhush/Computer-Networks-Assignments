@@ -31,7 +31,7 @@ int main()
     int bind_status = bind(server_socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (bind_status < 0)
     {
-        printf("Server Bind failed. \n");
+        printf("Server Bind failed. Port already in use.\n");
         exit(0);
     }
 
@@ -65,7 +65,7 @@ int main()
         }
 
         // Client IP and port information
-        printf("Connection accepted from client with IP-address and Port '%s:%u'\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+        printf("*****Connection accepted from client with IP-address and Port '%s:%u' *****\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
         // Writing into the file_ptr
         char empty[200];
