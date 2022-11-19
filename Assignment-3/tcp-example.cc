@@ -212,8 +212,8 @@ main (int argc, char *argv[])
 
   // Link between node-1 and node-2
   // n1 <=====> n2
-  std::string bandwidth_ = "10Mbps";
-  std::string delay_ = "100ms";
+  std::string bandwidth_ = "7Mbps";
+  std::string delay_ = "10ms";
 
   NodeContainer n1n2;
   n1n2.Add (n0n1.Get (1));

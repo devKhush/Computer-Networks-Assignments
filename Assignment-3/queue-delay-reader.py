@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 with open('tcp-example.tr') as f:
     lines = f.readlines()
@@ -21,8 +22,6 @@ with open('tcp-example.tr') as f:
             delay_time.append(
                 float(packet.split()[1]) - enqueue_time[int(packet.split()[18])])
 
-
-    
     plt.scatter(dequeue_time, delay_time, s=3, color='r')
     plt.xlabel('Dequeuing Time (in sec)')
     plt.ylabel('Queuing Delay = deque_time - enque_time (in sec)')
